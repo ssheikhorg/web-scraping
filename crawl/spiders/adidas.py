@@ -1,6 +1,7 @@
 from typing import Any
 
 import scrapy
+from scrapy.http import HtmlResponse
 from scrapy.spiders import CrawlSpider, Rule
 from scrapy.linkextractors import LinkExtractor
 
@@ -22,11 +23,18 @@ class AdidasSpider(CrawlSpider):
         Rule(LinkExtractor(allow="products"), callback="parse_product"),
     )
 
-    def parse_product(self, response: Any) -> Any:
+    def parse_product(self, response: HtmlResponse) -> dict[str, Any]:
         """parse product page"""
+        # parse only 5 items
+        if self.crawler.stats.get_value("downloader/response_count") > 5:
+            self.crawler.engine.close_spider(self, "crawled enough items")
+
         yield {
-            "name": response.css("h1::text").get(),
-            "price": response.css(".price::text").get(),
-            "description": response.css(".description::text").get(),
-            "url": response.url,
+            "breadcrumb_category": response.css(".breadcrumbListItemLink::text").getall(),
+            "category": f'{response.css(".test-genderName::text").get()} {response.css(".test-categoryName::text").get()}',
+            "product_name": response.css('.test-itemTitle::text').get(),
+            "price": response.css(".test-price-value::text").get(),
+            "image_url": response.css(".test-slider-list img::attr(src)").getall(),
+            "coordinated_product_name": response.css(".test-coordinated-itemTitle::text").getall(),
+            "coordinated_price": response.css(".test-price-value::text").get(),
         }
