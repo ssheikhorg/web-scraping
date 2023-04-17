@@ -1,7 +1,7 @@
-"""write an introduction to your project here"""
+## webcrawler for adidas, created with scrapy
 
-# install the poetry packages
+### install the poetry packages
 ```poetry shell```
 
-# run the crawler
+### run the crawler
 ```scrapy crawl adidas -O adidas.csv```
