@@ -19,7 +19,7 @@ class AdidasSpider(CrawlSpider):
 
     def parse_product(self, response: HtmlResponse) -> dict[str, Any]:
         """parse product page"""
-        if self.crawler.stats.get_value("downloader/response_count") > 5:
+        if self.crawler.stats.get_value("downloader/response_count") > 300:
             self.crawler.engine.close_spider(self, "crawled enough items")
 
         yield {
