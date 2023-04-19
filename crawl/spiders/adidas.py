@@ -23,15 +23,14 @@ class AdidasSpider(CrawlSpider):
             self.crawler.engine.close_spider(self, "crawled enough items")
 
         yield {
-            "breadcrumb_category": response.css(".breadcrumbListItemLink::text").getall(),
+            "breadcrumb_category": response.css(".breadcrumbListItemLink::text").gresponse.css('.main_image::attr(src)').getall(),
             "category": f'{response.css(".test-genderName::text").get()} {response.css(".test-categoryName::text").get()}',
             "product_name": response.css('.test-itemTitle::text').get(),
             "pricing": response.css(".test-price-value::text").get(),
-            "image_urls": ", ".join(
-                ["https://shop.adidas.jp" + url for url in response.css('.main_image::attr(src)').getall()]),
+            "image_urls": [response.urljoin(url) for url in response.css('.main_image::attr(src)').getall()],
             "descriptions_title": response.css('.test-commentItem-subheading::text').get(),
             "descriptions": response.css('.test-commentItem-mainText::text').get(),
             "description_itemized": response.css('.test-feature::text').getall(),
             "sizes": response.css("ul.sizeSelectorList > li > button::text").getall(),
-            "tags": response.css(".itemTagsPosition > div > div > a::text").getall()
+            "tags": response.css(".itemTagsPosition > div > div > a::text").getall(),
         }
